@@ -16,12 +16,12 @@ public class DialogueTrigger : MonoBehaviour
     {
         if (colliderPlayer)
         {
-            if (!_dialogueManager.IsTalking && hasInteracted == false)
+            if (!_dialogueManager.IsTalking && hasInteracted == false && Input.GetKeyUp(KeyCode.E))
             {
                 TriggerDialogue();
                 hasInteracted = true;
             }
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) && hasInteracted)
             {
                 _dialogueManager.DisplayNextSentence(dialogue);
             } 
