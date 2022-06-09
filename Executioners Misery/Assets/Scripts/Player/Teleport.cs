@@ -5,12 +5,14 @@ using UnityEngine;
 
 public class Teleport : MonoBehaviour
 {
+    [SerializeField] private TransitionAudio transitionAudio;
     private GameObject currentTeleporter;
 
     public void Update()
     {
         if (currentTeleporter != null)
         {
+            transitionAudio.FadeAudio();
             gameObject.transform.position = currentTeleporter.GetComponent<Teleporter>().GetDestination().position;
         }
     }
@@ -20,6 +22,7 @@ public class Teleport : MonoBehaviour
         if (other.CompareTag("Teleporter"))
         {
             currentTeleporter = other.gameObject;
+            transitionAudio = other.GetComponent<TransitionAudio>();
         }
     }
 

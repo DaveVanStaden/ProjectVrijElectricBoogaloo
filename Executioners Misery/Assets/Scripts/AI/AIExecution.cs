@@ -13,6 +13,7 @@ public class AIExecution : MonoBehaviour
     public Transform executionSite;
     public Transform Guilotine;
     public Transform basePosition;
+    public DialogueAdjusted adjustDialogue;
     private NavMeshAgent agent;
     
     public bool sendToExecution;
@@ -46,6 +47,7 @@ public class AIExecution : MonoBehaviour
         if(sendToCage)
         {
             SetDestinationExecutionSite();
+            adjustDialogue.changeHoldingCell();
         }
 
         if (canExecute)
@@ -61,6 +63,7 @@ public class AIExecution : MonoBehaviour
             {
                 sendToCage = false;
                 SetDestinationCityTeleport();
+                adjustDialogue.ChangeBaseSentence();
                 canExecute = false;
             }
         }
