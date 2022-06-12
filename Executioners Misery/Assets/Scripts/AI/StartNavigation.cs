@@ -10,6 +10,9 @@ public class StartNavigation : MonoBehaviour
     [SerializeField] private GameObject teleportCity;
     [SerializeField] private GameObject teleportExecution;
     public bool isInCity = true;
+    public bool goToCell;
+    public bool goExecute;
+    public bool isInCell;
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space) && _execution.canInput)
@@ -31,14 +34,25 @@ public class StartNavigation : MonoBehaviour
         if (other.CompareTag("Teleporter") && isInCity)
         {
             _execution.sendToTeleporterExecution = false;
-            _execution.sendToCage = true;
+            _execution.sendToCellTeleport = true;
             isInCity = false;
-        } else if (other.CompareTag("Teleporter") && !isInCity)
+            goToCell = true;
+        }
+        if (other.CompareTag("Teleporter") && !isInCity && !goToCell)
         {
             _execution.SetDestinationBasePosition();
             _execution.canSendToTeleporter = true;
             _execution.sendToTeleporterCity = false;
             isInCity = true;
+        }
+
+        if (other.CompareTag("Teleporter") && !isInCity && goToCell)
+        {
+            _execution.SetDestinationCellTeleport();
+            //_execution.sendToCage = true;
+            _execution.sendToCellTeleport = false;
+            goToCell = false;
+            isInCell = true;
         }
     }
 

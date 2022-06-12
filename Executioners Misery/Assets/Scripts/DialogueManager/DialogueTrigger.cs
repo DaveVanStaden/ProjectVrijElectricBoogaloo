@@ -9,6 +9,7 @@ public class DialogueTrigger : MonoBehaviour
     public Dialogue dialogue;
     private bool hasInteracted;
     private bool colliderPlayer;
+    [SerializeField] private AnimationManager animManager;
 
 
 
@@ -23,6 +24,9 @@ public class DialogueTrigger : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.E) && hasInteracted)
             {
+                animManager.Interact = true;
+                animManager.Walk = false;
+                animManager.Idle = false;
                 _dialogueManager.DisplayNextSentence(dialogue);
             } 
         }
@@ -50,6 +54,9 @@ public class DialogueTrigger : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             colliderPlayer = false;
+            animManager.Interact = false;
+            animManager.Walk = false;
+            animManager.Idle = true;
             _dialogueManager.EndDialogue();
         }
     }

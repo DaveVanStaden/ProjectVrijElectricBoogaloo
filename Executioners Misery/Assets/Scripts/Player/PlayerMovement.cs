@@ -21,11 +21,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 velocity;
     private bool isGrounded;
     private bool Teleport;
-    void Start()
-    {
-        
-    }
-
+    [SerializeField] private AnimationManager animManager;
     // Update is called once per frame
     void Update()
     {
@@ -45,16 +41,24 @@ public class PlayerMovement : MonoBehaviour
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity,
                 turnSmoothTime);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
             Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward; 
             controller.Move(moveDir.normalized * speed * Time.deltaTime);
+            if (!animManager.Interact)
+            {
+                animManager.Interact = false;
+                animManager.Walk = true;
+                animManager.Idle = false;
+            }
         }
-
-        /*if (Input.GetButtonDown("Jump") && isGrounded)
+        else
         {
-            velocity.y = Mathf.Sqrt(jumpSpeed * -2f * gravity);
-        }*/
-
+            if (!animManager.Interact)
+            {
+                animManager.Interact = false;
+                animManager.Walk = false;
+                animManager.Idle = true;
+            }
+        }
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
     }
