@@ -12,13 +12,14 @@ public class StartNavigation : MonoBehaviour
     public bool isInCity = true;
     public bool goToCell;
     public bool goExecute;
-    public bool isInCell;
+    public bool goesAway;
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space) && _execution.canInput)
         {
             _execution.sendToTeleporterExecution = true;
             _execution.canSendToTeleporter = false;
+            goesAway = true;
         }
     }
     private void OnTriggerEnter(Collider other)
@@ -31,28 +32,47 @@ public class StartNavigation : MonoBehaviour
         {
             _execution.canInput = false;
         }
-        if (other.CompareTag("Teleporter") && isInCity)
+        if (other.CompareTag("Teleporter") && isInCity && goesAway)
         {
             _execution.sendToTeleporterExecution = false;
             _execution.sendToCellTeleport = true;
             isInCity = false;
             goToCell = true;
+            goesAway = false;
         }
-        if (other.CompareTag("Teleporter") && !isInCity && !goToCell)
+        if (other.CompareTag("Teleporter") && !isInCity && !goToCell && _execution.canReturn && !_execution.canExecute &&!_execution.isExecuting)
         {
             _execution.SetDestinationBasePosition();
             _execution.canSendToTeleporter = true;
             _execution.sendToTeleporterCity = false;
+            _execution.canReturn = false;
             isInCity = true;
         }
 
-        if (other.CompareTag("Teleporter") && !isInCity && goToCell)
+        if (other.CompareTag("Teleporter") && !isInCity && goToCell && !_execution.canExecute)
         {
             _execution.SetDestinationCellTeleport();
-            //_execution.sendToCage = true;
+            _execution.sendToCage = true;
             _execution.sendToCellTeleport = false;
             goToCell = false;
-            isInCell = true;
+        }
+
+        if (other.CompareTag("Teleporter") && _execution.isExecuting)
+        {
+            _execution.SetDestinationGuilotine();
+        }
+
+        if (other.CompareTag("Guilotine"))
+        {
+            _execution.animController.Idle = true;
+            _execution.animController.Walk = false;
+            _execution.animController.Talk = false;
+        }
+
+        if (other.CompareTag("OpenGate"))
+        {
+            _execution.animGateController.Open = true;
+            StartCoroutine(_execution.gateOpenClose(_execution.target));
         }
     }
 

@@ -17,6 +17,8 @@ public class AIExecution : MonoBehaviour
     public Transform executionFromCellTeleport;
     public DialogueAdjusted adjustDialogue;
     private NavMeshAgent agent;
+    public AIAnimationController animController;
+    public GateAnimationManager animGateController;
     
     public bool sendToCage;
     public bool sendToCellTeleport;
@@ -25,9 +27,14 @@ public class AIExecution : MonoBehaviour
     public bool canSendToTeleporter = true;
     public bool canInput;
     public bool canExecute;
+    public bool canReturn;
+    public bool isExecuting;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        animController.Idle = true;
+        animController.Walk = false;
+        animController.Talk = false;
     }
     
     void Update()
@@ -56,7 +63,7 @@ public class AIExecution : MonoBehaviour
                 sendToCage = true;
             }
         }
-        if(sendToCage)
+        if(sendToCage && !canExecute)
         {
             SetDestinationExecutionSite();
             adjustDialogue.changeHoldingCell();
@@ -67,7 +74,10 @@ public class AIExecution : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.R))
             {
                 sendToCage = false;
-                SetDestinationGuilotine();
+                SetDestinationExecutionTeleportFromCell();
+                animGateController.Open = true;
+                StartCoroutine(gateOpenClose(target));
+                isExecuting = true;
                 canExecute = false;
             }
 
@@ -75,6 +85,8 @@ public class AIExecution : MonoBehaviour
             {
                 sendToCage = false;
                 SetDestinationExecutionTeleportFromCell();
+                animGateController.Open = true;
+                StartCoroutine(gateOpenClose(target));
                 adjustDialogue.ChangeBaseSentence();
                 canExecute = false;
                 sendToTeleporterCity = true;
@@ -89,43 +101,78 @@ public class AIExecution : MonoBehaviour
                 sendToTeleporterCity = false;
             }
         }
-        
+
     }
 
     public void SetDestinationExecutionTeleport()
     {
         target = teleportExecution;
+        animController.Walk = true;
+        animController.Idle = false;
+        animController.Talk = false;
     }
     public void SetDestinationCityTeleport()
     {
         target = teleportCity;
+        animController.Walk = true;
+        animController.Idle = false;
+        animController.Talk = false;
     }
     public void SetDestinationExecutionSite()
     {
         target = executionSite;
+        animController.Walk = true;
+        animController.Idle = false;
+        animController.Talk = false;
     }
     public void SetDestinationGuilotine()
     {
         target = Guilotine;
+        animController.Walk = true;
+        animController.Idle = false;
+        animController.Talk = false;
     }
     public void SetDestinationBasePosition()
     {
         target = basePosition;
+        animController.Walk = true;
+        animController.Idle = false;
+        animController.Talk = false;
     }
     public void SetDestinationCellTeleport()
     {
         target = cellTeleport;
+        animController.Walk = true;
+        animController.Idle = false;
+        animController.Talk = false;
     }
     public void SetDestinationExecutionTeleportFromCell()
     {
         target = executionFromCellTeleport;
+        animController.Walk = true;
+        animController.Idle = false;
+        animController.Talk = false;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("ExecutionCage"))
         {
+            canReturn = true;
             canExecute = true;
+            animController.Idle = true;
+            animController.Talk = false;
+            animController.Walk = false;
+            
         }
+    }
+
+    public IEnumerator gateOpenClose(Transform currentTarget)
+    {
+        target = null;
+        yield return new WaitForSeconds(2);
+        target = currentTarget;
+        animGateController.Open = false;
+
     }
 }

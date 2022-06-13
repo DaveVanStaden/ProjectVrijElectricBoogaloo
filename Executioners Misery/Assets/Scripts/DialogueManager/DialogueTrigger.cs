@@ -10,6 +10,7 @@ public class DialogueTrigger : MonoBehaviour
     private bool hasInteracted;
     private bool colliderPlayer;
     [SerializeField] private AnimationManager animManager;
+    [SerializeField] private AIAnimationController aiAnimManager;
 
 
 
@@ -27,6 +28,9 @@ public class DialogueTrigger : MonoBehaviour
                 animManager.Interact = true;
                 animManager.Walk = false;
                 animManager.Idle = false;
+                aiAnimManager.Talk = true;
+                aiAnimManager.Walk = false;
+                aiAnimManager.Idle = false;
                 _dialogueManager.DisplayNextSentence(dialogue);
             } 
         }

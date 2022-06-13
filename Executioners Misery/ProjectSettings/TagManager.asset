@@ -7,6 +7,9 @@ TagManager:
   - Teleport
   - Teleporter
   - ExecutionCage
+  - Guilotine
+  - OpenGate
+  - CloseGate
   layers:
   - Default
   - TransparentFX
