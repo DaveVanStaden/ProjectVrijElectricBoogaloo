@@ -9,6 +9,7 @@ public class DialogueTrigger : MonoBehaviour
     public Dialogue dialogue;
     private bool hasInteracted;
     private bool colliderPlayer;
+    public bool hasAnimations;
     [SerializeField] private AnimationManager animManager;
     [SerializeField] private AIAnimationController aiAnimManager;
 
@@ -23,7 +24,7 @@ public class DialogueTrigger : MonoBehaviour
                 TriggerDialogue();
                 hasInteracted = true;
             }
-            if (Input.GetKeyDown(KeyCode.E) && hasInteracted)
+            if (Input.GetKeyDown(KeyCode.E) && hasInteracted && hasAnimations)
             {
                 animManager.Interact = true;
                 animManager.Walk = false;
@@ -33,6 +34,10 @@ public class DialogueTrigger : MonoBehaviour
                 aiAnimManager.Idle = false;
                 _dialogueManager.DisplayNextSentence(dialogue);
             } 
+            if(Input.GetKeyDown(KeyCode.E) && hasInteracted && !hasAnimations)
+            {
+                _dialogueManager.DisplayNextSentence(dialogue);
+            }
         }
         else
         {
@@ -55,12 +60,18 @@ public class DialogueTrigger : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "Player" && hasAnimations)
         {
             colliderPlayer = false;
             animManager.Interact = false;
             animManager.Walk = false;
             animManager.Idle = true;
+            _dialogueManager.EndDialogue();
+        }
+
+        if (other.gameObject.tag == "Player" && !hasAnimations)
+        {
+            colliderPlayer = false;
             _dialogueManager.EndDialogue();
         }
     }
