@@ -68,12 +68,6 @@ public class StartNavigation : MonoBehaviour
             _execution.animController.Walk = false;
             _execution.animController.Talk = false;
         }
-
-        if (other.CompareTag("OpenGate"))
-        {
-            _execution.animGateController.Open = true;
-            StartCoroutine(_execution.gateOpenClose(_execution.target));
-        }
     }
 
     private void OnTriggerExit(Collider other)

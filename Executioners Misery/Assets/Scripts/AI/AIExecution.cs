@@ -18,8 +18,7 @@ public class AIExecution : MonoBehaviour
     public DialogueAdjusted adjustDialogue;
     private NavMeshAgent agent;
     public AIAnimationController animController;
-    public GateAnimationManager animGateController;
-    
+
     public bool sendToCage;
     public bool sendToCellTeleport;
     public bool sendToTeleporterExecution;
@@ -75,8 +74,6 @@ public class AIExecution : MonoBehaviour
             {
                 sendToCage = false;
                 SetDestinationExecutionTeleportFromCell();
-                animGateController.Open = true;
-                StartCoroutine(gateOpenClose(target));
                 isExecuting = true;
                 canExecute = false;
             }
@@ -85,8 +82,6 @@ public class AIExecution : MonoBehaviour
             {
                 sendToCage = false;
                 SetDestinationExecutionTeleportFromCell();
-                animGateController.Open = true;
-                StartCoroutine(gateOpenClose(target));
                 adjustDialogue.ChangeBaseSentence();
                 canExecute = false;
                 sendToTeleporterCity = true;
@@ -165,14 +160,5 @@ public class AIExecution : MonoBehaviour
             animController.Walk = false;
             
         }
-    }
-
-    public IEnumerator gateOpenClose(Transform currentTarget)
-    {
-        target = null;
-        yield return new WaitForSeconds(2);
-        target = currentTarget;
-        animGateController.Open = false;
-
     }
 }
