@@ -10,6 +10,7 @@ public class DialogueTrigger : MonoBehaviour
     private bool hasInteracted;
     private bool colliderPlayer;
     public bool hasAnimations;
+    public GameObject interactUI;
     [SerializeField] private AnimationManager animManager;
     [SerializeField] private AIAnimationController aiAnimManager;
     [SerializeField] private AIExecution AI;
@@ -20,7 +21,7 @@ public class DialogueTrigger : MonoBehaviour
     {
         if (colliderPlayer)
         {
-            if (!_dialogueManager.IsTalking && hasInteracted == false && Input.GetKeyUp(KeyCode.E))
+            if (!_dialogueManager.IsTalking && hasInteracted == false && hasAnimations && Input.GetKeyUp(KeyCode.E))
             {
                 TriggerDialogue();
                 AI.DialogueStartText.gameObject.SetActive(false);
@@ -31,6 +32,14 @@ public class DialogueTrigger : MonoBehaviour
                 aiAnimManager.Walk = false;
                 aiAnimManager.Idle = false;
                 hasInteracted = true;
+            }
+
+            if (!_dialogueManager.IsTalking && hasInteracted == false && !hasAnimations && Input.GetKeyUp(KeyCode.E))
+            {
+                TriggerDialogue();
+                AI.DialogueStartText.gameObject.SetActive(false);
+                hasInteracted = true;
+                interactUI.SetActive(false);
             }
             if (Input.GetKeyDown(KeyCode.E) && hasInteracted && hasAnimations)
             {
@@ -57,6 +66,7 @@ public class DialogueTrigger : MonoBehaviour
         if (other.gameObject.tag == ("Player"))
         {
             colliderPlayer = true;
+            interactUI.SetActive(true);
         }
     }
 
@@ -69,12 +79,14 @@ public class DialogueTrigger : MonoBehaviour
             animManager.Walk = false;
             animManager.Idle = true;
             _dialogueManager.EndDialogue();
+            interactUI.SetActive(false);
         }
 
         if (other.gameObject.tag == "Player" && !hasAnimations)
         {
             colliderPlayer = false;
             _dialogueManager.EndDialogue();
+            interactUI.SetActive(false);
         }
     }
 }

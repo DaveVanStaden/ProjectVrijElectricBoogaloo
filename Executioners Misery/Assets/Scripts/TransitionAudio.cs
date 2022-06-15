@@ -20,8 +20,8 @@ public class TransitionAudio : MonoBehaviour
 
         while (timeElapsed < timeToFade)
         {
-            source2.volume = Mathf.Lerp(0, 1, timeElapsed / timeToFade);
-            source1.volume = Mathf.Lerp(1, 0, timeElapsed / timeToFade);
+            source2.volume = Mathf.Lerp(0, 0.5f, timeElapsed / timeToFade);
+            source1.volume = Mathf.Lerp(0.5f, 0, timeElapsed / timeToFade);
             timeElapsed += Time.deltaTime;
             yield return null;
         }
