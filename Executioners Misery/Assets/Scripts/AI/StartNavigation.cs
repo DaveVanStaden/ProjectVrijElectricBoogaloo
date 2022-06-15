@@ -9,6 +9,7 @@ public class StartNavigation : MonoBehaviour
     [SerializeField] private TeleportAI teleport;
     [SerializeField] private GameObject teleportCity;
     [SerializeField] private GameObject teleportExecution;
+    public ExecuteCharacter executeEnding;
     public bool isInCity = true;
     public bool goToCell;
     public bool goExecute;
@@ -27,6 +28,8 @@ public class StartNavigation : MonoBehaviour
         if (other.CompareTag("Player") && _execution.canSendToTeleporter)
         {
             _execution.canInput = true;
+            _execution.StartPlaceText.gameObject.SetActive(true);
+            _execution.DialogueStartText.gameObject.SetActive(true);
         }
         else
         {
@@ -67,6 +70,7 @@ public class StartNavigation : MonoBehaviour
             _execution.animController.Idle = true;
             _execution.animController.Walk = false;
             _execution.animController.Talk = false;
+            executeEnding.canExecute = true;
         }
     }
 
@@ -75,6 +79,12 @@ public class StartNavigation : MonoBehaviour
         if (other.CompareTag("Player") && _execution.canSendToTeleporter)
         {
             _execution.canInput = false;
+        }
+
+        if (other.CompareTag("Player"))
+        {
+            _execution.StartPlaceText.gameObject.SetActive(false);
+            _execution.DialogueStartText.gameObject.SetActive(false);
         }
     }
 }

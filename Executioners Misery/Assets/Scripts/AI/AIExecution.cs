@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class AIExecution : MonoBehaviour
 {
@@ -18,6 +19,9 @@ public class AIExecution : MonoBehaviour
     public DialogueAdjusted adjustDialogue;
     private NavMeshAgent agent;
     public AIAnimationController animController;
+    public Text StartPlaceText;
+    public Text DialogueStartText;
+    public Text ExecutioncellText;
 
     public bool sendToCage;
     public bool sendToCellTeleport;
@@ -28,6 +32,7 @@ public class AIExecution : MonoBehaviour
     public bool canExecute;
     public bool canReturn;
     public bool isExecuting;
+    private bool canInputExecute = true;
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -70,12 +75,18 @@ public class AIExecution : MonoBehaviour
 
         if (canExecute)
         {
-            if (Input.GetKeyDown(KeyCode.R))
+            if (canInputExecute)
+            {
+                ExecutioncellText.gameObject.SetActive(true);
+            }
+            if (Input.GetKeyDown(KeyCode.R) && canInputExecute)
             {
                 sendToCage = false;
                 SetDestinationExecutionTeleportFromCell();
                 isExecuting = true;
                 canExecute = false;
+                canInputExecute = false;
+                ExecutioncellText.gameObject.SetActive(false);
             }
 
             if (Input.GetKeyDown(KeyCode.Q))
@@ -85,6 +96,7 @@ public class AIExecution : MonoBehaviour
                 adjustDialogue.ChangeBaseSentence();
                 canExecute = false;
                 sendToTeleporterCity = true;
+                ExecutioncellText.gameObject.SetActive(false);
             }
         }
 

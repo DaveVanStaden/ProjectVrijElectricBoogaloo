@@ -12,6 +12,7 @@ public class DialogueTrigger : MonoBehaviour
     public bool hasAnimations;
     [SerializeField] private AnimationManager animManager;
     [SerializeField] private AIAnimationController aiAnimManager;
+    [SerializeField] private AIExecution AI;
 
 
 
@@ -22,16 +23,17 @@ public class DialogueTrigger : MonoBehaviour
             if (!_dialogueManager.IsTalking && hasInteracted == false && Input.GetKeyUp(KeyCode.E))
             {
                 TriggerDialogue();
-                hasInteracted = true;
-            }
-            if (Input.GetKeyDown(KeyCode.E) && hasInteracted && hasAnimations)
-            {
+                AI.DialogueStartText.gameObject.SetActive(false);
                 animManager.Interact = true;
                 animManager.Walk = false;
                 animManager.Idle = false;
                 aiAnimManager.Talk = true;
                 aiAnimManager.Walk = false;
                 aiAnimManager.Idle = false;
+                hasInteracted = true;
+            }
+            if (Input.GetKeyDown(KeyCode.E) && hasInteracted && hasAnimations)
+            {
                 _dialogueManager.DisplayNextSentence(dialogue);
             } 
             if(Input.GetKeyDown(KeyCode.E) && hasInteracted && !hasAnimations)
